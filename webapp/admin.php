@@ -36,18 +36,25 @@ DB data:
 
 <style>
 	label {width:40px;display:block;float:left;}
+	label.inline { display: inline; float: none; width: auto; }
 </style>
 
 <h1>Update Levels</h1>
 <form method="post">
 <input type="hidden" name="action" value="update_blood"/>
-<?php foreach($blood_type as $type=>$data): ?>
-<label><?=$type;?></label>
-<select name="status_<?=$type;?>">
-<?php foreach($status_level as $i=>$n): ?>
-<option <?=($i==$latest[$type]["status"]) ? "selected" : "" ; ?> value="<?=$i;?>"><?=$n;?></option>
-<?php endforeach; ?>
-</select><br/>
+<?php $blood_type_count = 0; ?>
+<?php foreach($blood_type as $type=>$data): $blood_type_count++; ?>
+<div class="blood_row">
+	<label><?=$type;?></label>
+	<?php foreach($status_level as $i=>$n): ?>
+	<input class="updatePreview" type="radio" 
+		<?=($i==$latest[$type]["status"]) ? "checked" : "" ; ?>
+		name="status_<?=$type;?>" 
+		value="<?=$i;?>" 
+		id="blood_<?=$blood_type_count?>_<?=$i;?>"/>
+	<label class="inline" for="blood_<?=$blood_type_count?>_<?=$i;?>"><?=$n;?></label>
+	<?php endforeach; ?>
+</div>
 <?php endforeach; ?>
 <input type="submit"/>
 </form>
