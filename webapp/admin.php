@@ -6,7 +6,7 @@ $latest=get_latest(1);
 if(@$_POST["action"]=="update_blood"){
 	foreach($blood_type as $type=>$data){
 		$status=@$_POST["status_".$type];
-		if($status){
+		if(isset($status)){
 			if(@$latest[$type]["status"]!=$status){
 				DB::query("insert into bloods(bank_id,type,status) values(?,?,?)",array($bank_id,$type,$status));
 				$latest[$type]["status"]=$status;
