@@ -2,11 +2,48 @@
 <html>
 <head>
 <title>RIPAS Blood Bank status</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+        <!-- icons, ipad3, iphone retina, ipad, iphone -->
+<link rel="apple-touch-icon" sizes="144x144" href="ico/icon-144-precomposed.png">
+<link rel="apple-touch-icon" sizes="114x114" href="ico/icon-114-precomposed.png">
+<link rel="apple-touch-icon" sizes="72x72"   href="ico/icon-72-precomposed.png">
+<link rel="apple-touch-icon"                 href="ico/icon-57-precomposed.png">
+<link rel="shortcut icon"                    href="ico/favicon.png">
+
 <script src="jx.js"></script>
 <style>
-.verylow {color:#F00;}
-.low {color:#A00;}
-.ok {color:#0A0;}
+		.verylow {color:#F00;}
+		.low {color:#A00;}
+		.ok {color:#0A0;}
+		body { margin: 0 auto 0 auto; }
+		ul { margin: 0; padding-left: 1em; }
+		ul li { list-style-type: none; margin-bottom: 0.8em;}
+		.section { padding: 1em; border: 1px solid #ddd; margin-bottom: 1em;
+				width: 90%; margin-right: 1em; }
+		.section.prepadded { padding: 0; }
+		@media (min-width: 641px) {
+				body {
+					width: 95%;
+	    		}
+		}
+
+		@media (min-width: 1025px) {
+				.section { max-width: 300px; }
+				body {
+					width: 90%;
+	    		}
+		}
+
+
+		@media (min-width: 630px) {
+				.section {
+				      float: left;
+	    		}
+		}
+
 </style>
 <script>
 function make_post(o){
@@ -27,9 +64,30 @@ window.onload=function(){
 </script>
 </head>
 <body>
-<h1>Ripas Bloodbank Status</h1>
-<table id="content">
+		<h1>Ripas Bloodbank Status</h1>
+		<div>
+				<div class="section small">
+						<table id="content">
 
-</table>
+						</table>
+				</div>
+				<div class="section">
+						<ul>
+								<li><strong>Donation Times</strong>:
+								<div class='days'>Monday - Thursday + Saturday</div>
+								<div class='time'>8-11 am, 1:30 pm-4pm</li>
+								<li><strong>Telephone</strong>:
+								<div><a href="tel:+673-2242424">(+673) 2242424</a> ext 7338 / 7124</div></li>
+								<li><strong>Email</strong>:
+								<div><a href="mailto:bdcripas@gmail.com">bdcripas@gmail.com</a></div></li>
+								<li><strong>Facebook</strong>:
+								<div><a href="https://www.facebook.com/BloodBankRIPAS.Brunei">BloodBankRIPAS.Brunei</a></div></li>
+						</ul>
+				</div>
+				<div class="section prepadded">
+						<iframe
+								src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FBloodBankRIPAS.Brunei&amp;width=300&amp;height=395&amp;colorscheme=light&amp;show_faces=false&amp;header=false&amp;stream=true&amp;show_border=false&amp;appId=347427152066125" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:395px;" allowTransparency="true"></iframe>
+				</div>
+		</div>
 </body>
 </html>

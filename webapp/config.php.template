@@ -5,4 +5,7 @@ define('DB_USER', '');
 define('DB_PASS', '');
 define('FB_APP_ID', '');
 define('FB_APP_SECRET', '');
+define('TWITTER_CONSUMER_KEY', '');
+define('TWITTER_CONSUMER_SECRET', '');
+
 ?>
