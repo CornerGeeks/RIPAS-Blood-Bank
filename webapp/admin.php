@@ -18,9 +18,6 @@ if(@$_POST["action"]=="update_blood"){
 
 
 
-
-
-
 ?>
 
 <?php if(@$_GET["print"]): ?>
