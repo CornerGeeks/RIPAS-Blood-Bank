@@ -1,0 +1,112 @@
+<link rel="stylesheet"  href="style.css"/>
+<style>
+/* 
+#D30142
+#60181C
+
+#F3F3F5
+
+#404042 //gray
+
+#71263B
+
+#FFB612; //yellow
+#30B132 //green
+#E4392F //red
+*/
+h1,h2,h3,h4 {font-size:100%;font-weight:normal !important; background:#D30142;color:#FFF;padding:2em;}
+body {margin:50px;color:#D30142;}
+body {font-family:'Arial';font-weight:normal !important;text-transform:uppercase;}
+
+
+.color1 {color:#D30142;}
+.style1,.style2,.style3,.style4 {padding:2em;margin-bottom:1em;}
+.style4 {font-size:100%;font-weight:normal !important;background:#D30142;color:#FFF;padding:2em;border:none;text-transform:uppercase;}
+.style1 {color:#404042;background:#F3F3F5;padding:1em;font-family:Ubuntu;text-transform: none}
+.style2 {border:1px solid #71263B;padding:2em;font:Ubuntu;text-transform: none;color:#000;}
+.style3 {font-family: Ubuntu;text-transform: none;padding:2em;color:#000;}
+
+li {display:inline-block;width:50px;height:35px;line-height:35px;text-align:center;color:#404042;border:1px solid #D30142;border-radius:4px;font-weight: bold}
+
+.blood_status {display:block;width:100%;height:35px;line-height:35px;color:#404042;border:1px solid #999999;border-radius:4px;font-weight: bold;margin-bottom: 10px}
+.blood_status div {display:inline-block;}
+.blood_status .type {width:20%;text-align:center;float:left;}
+.blood_status .level {width:80%}
+.blood_status .negative {background: #F3F3F5}
+
+.red .type {color:#E4392F;}
+.red .level {background: #E4392F}
+.yellow .type {color:#FFB612;}
+.yellow .level {background: #FFB612;}
+.green .type {color:#30B132;}
+.green .level {background:#30B132;}
+
+</style>
+<script>
+var info={
+	"very low": 	{color:"red",level:1},
+	"low": 			{color:"red",level:2},
+	"okay": 		{color:"yellow",level:3},
+	"good": 		{color:"green",level:4},
+	"full": 		5
+}
+
+
+function make_status(status){
+	var type=status.getElementsByClassName('type')[0]
+	var level=status.getElementsByClassName('level')[0]
+	status.className+=" "+info[level.innerHTML.toLowerCase()].color
+	var bar=document.createElement('div')
+	bar.className="negative"
+	bar.style.width= (80-~~(80*info[level.innerHTML.toLowerCase()].level/info.full))+"%"
+	bar.innerHTML="&nbsp;"
+	bar.style.position="absolute"
+	bar.style.right="0px"
+	bar.style.top="0px"
+	status.style.position="relative"
+	status.appendChild(bar)
+	level.innerHTML="&nbsp;"
+}
+window.onload=function(){
+	var status=document.getElementsByClassName("blood_status");
+	for(var i=0;i<status.length;i++){
+		make_status(status[i])
+	}
+}
+</script>
+
+<body>
+<h1>UI Font: <span class="ui">Uppercase Arial</span></h1>
+<div class="style3">Body text is ubuntu</div>
+<div class="style1">Lorem ipsum</div>
+<div class="style2">Lorem ipsum</div>
+
+<ul>
+<li>A+</li>
+<li>A-</li>
+<li>B+</li>
+<li>B-</li>
+<li>AB-</li>
+</ul>
+
+<div class="blood_status">
+	<div class="type">A+</div>
+	<div class="level">Low</div>
+</div>
+
+
+<div class="blood_status">
+	<div class="type">O+</div>
+	<div class="level">Okay</div>
+</div>
+
+<div class="blood_status">
+	<div class="type">AB+</div>
+	<div class="level">Good</div>
+</div>
+
+
+
+<button class="style4">Get Started Now</button>
+
+</body>
