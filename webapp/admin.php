@@ -7,6 +7,7 @@ session_start();
 
 $bank_id=1;
 $latest=get_latest(1);
+// update the DB!
 if(@$_POST["action"]=="update_blood"){
 	foreach($blood_type as $type=>$data){
 		$status=@$_POST["status_".$type];
@@ -18,6 +19,7 @@ if(@$_POST["action"]=="update_blood"){
 		}
 	}
 }
+
 $config = array(
 	'TWITTER_CONSUMER_KEY' => TWITTER_CONSUMER_KEY,
 	'TWITTER_CONSUMER_SECRET'=> TWITTER_CONSUMER_SECRET,
@@ -29,7 +31,42 @@ $config = array(
 // handle 3rd party posting
 $posting = array(); 
 $posting['facebook'] = new PostToFacebook($config);
-$posting['twitter'] = new PostToTwitter($config);
+#$posting['twitter'] = new PostToTwitter($config); // TODO: fix this
+
+
+
+// message posting
+if (@$_POST['message_preview_input'] != "" ){
+	$message = "";
+	$message .= $_POST['message_preview_input'] . "\n";
+	$attachments = array();
+	$attachments_str = "";
+	if(!empty($_FILES)){
+		foreach($_FILES['image']['tmp_name'] as $k=>$v){
+			if($v == '') continue;
+			$imageData = getimagesize($v);
+			if(!empty($imageData)){
+				$attachments[] = $v;
+				if($attachments_str != "") $attachments_str .= ",";
+				$attachments_str .= $v;
+			}
+		}
+	}
+
+	$posting_message = array(
+		'message' => $message,
+		'attachments' => $attachments,
+	);
+
+	$results = array();
+	foreach($posting as $id=>$postingObj)
+	{
+		if(@$_POST["post_to"] == $id){
+			$results[$id] = $postingObj->postMessage($posting_message, array('post'=>$_POST, 'get' => $_GET, 'files' => $_FILES));
+		}			
+	}	
+}
+
 ?>
 
 <?php if(@$_GET["print"]): ?>
@@ -47,10 +84,38 @@ DB data:
 	label {width:40px;display:block;float:left;}
 	label.inline { display: inline; float: none; width: auto; }
 	label.block { display: block; float: none; width: auto; }
+	.clear { clear: both; }
+	#form_blood {
+		float: left;
+		margin-right: 1em;
+	}
+	#preview {
+		border-left : 1px solid #ddd;
+		padding: 0.5em 1em;
+		float: left;
+	}
+		#preview #message_preview{
+			width: 12em;
+			border : 1px solid #ddd;
+			background-color: #ccc;
+			padding: 5px;
+		}
 </style>
 
 <h1>Update Levels</h1>
-<form method="post">
+<?php if(isset($results)) : ?>
+	<?php foreach($results as $id=>$messageResponse) : ?>
+		<?php if ($messageResponse['STATUS'] == 200) : ?>
+			Posted to <?php echo $id ?>: <a href="<?php echo $messageResponse['data']['link'] ?>"><?php echo $messageResponse['data']['link'] ?></a>
+		<?php else : ?>
+			Failed posting to <?php echo $id ?>.
+			<?php foreach($messageResponse['data'] as $err) : ?>
+				<div class='error'><?php echo $err; ?></div>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
+<?php endif; ?>
+<form id="form_blood" method="post">
 <input type="hidden" name="action" value="update_blood"/>
 <?php $blood_type_count = 0; ?>
 <?php foreach($blood_type as $type=>$data): $blood_type_count++; ?>
@@ -71,65 +136,66 @@ DB data:
 	<textarea id="message_header" name="message_header" class="updatePreview"></textarea>
 </div>
 
-<div>
+<!-- <div>
 	<label for="message_footer" class="block">Message footer:</label>
 	<textarea id="message_footer" name="message_footer" class="updatePreview"></textarea>
 </div>
-	<div>
+ -->	<div>
 	Post to
 	<?php foreach($posting as $id=>$postingObj) : ?>
 		<div>
 			<?php if($postingObj->hasAccess()) : ?>
 			<input type="checkbox" name="post_to" id="post_to_<?php echo $id ?>" value="<?php echo $id ?>" /><label class="inline" for="post_to_<?php echo $id ?>"><?php echo $postingObj->getName() ?></label>
-			<?php echo $postingObj->toString(); ?>
 			<?php else : ?>
 			<?php endif; ?>
+			<?php echo $postingObj->toString(); ?>
 		</div>
 	<?php endforeach; ?>
-
-
-
-<!-- 	<div>
-		<?php if($posting['twitter']->haveAccess()) : ?>
-		<input type="checkbox" name="post_to" id="post_to_twitter" value="twitter" /><label class="inline" for="post_to_twitter">Twitter</label>
-		<?php else : ?>
-		<?php endif; ?>
-	</div>
- -->	<div>
-		<input type="checkbox" name="post_to" id="post_to_instagram" value="linked" /><label class="inline" for="post_to_instagram">Instagram</label>
-	</div>
 </div>
+<textarea id="message_preview_input" name="message_preview_input" style="display: none"></textarea>
 <input type="submit"/>
 </form>
-<div>
+<div id="preview">
 	<strong>Preview of message:</strong>
 	<div id="message_preview">
 	</div>
 </div>
+<br class="clear" />
 <script src="js/jquery-1.10.2.min.js"></script>
 <script>
 $(document).ready(function(){
 	var form = $("#form_blood");
 	var messageHeader = $("#message_header");
-	var messageFooter = $("#message_footer");
+	//var messageFooter = $("#message_footer");
 
-	$(".updatePreview").on('keyup', function(){ updatePreview(); });
+	$(".updatePreview").on('keyup', function(){ updatePreview(); }).trigger('keyup');
 	$(".updatePreview").on('change', function(){ updatePreview(); });
 	function updatePreview(){
 
 		var msg = "";
 		var blood = "";
-		form.find(":checked").each(function(){
+		form.find(".updatePreview:checked").each(function(){
 			var obj = jQuery(this);
-			var blood_type = obj.attr("name").replace("blood_", "").toUpperCase();
+			var blood_type = obj.attr("name").replace("status_", "").toUpperCase();
 			var status = obj.val();
-			blood += "<li>" + blood_type + ": " + status + "</li>";
+			var statusText = "";
+			switch(status){
+				case "1":
+					statusText = "Very Low";
+					break;
+				case "2":
+					statusText = "Low";
+					break;
+			}
+			if(status == "1" || status == "2")
+				blood += "  " + blood_type + ": " + statusText + "\n";
 
 		});
 		msg +=  "<div>" + messageHeader.val()  + "</div>";
-		msg +=  "<ul>" + blood  + "</ul>";
-		msg +=  "<div>" + messageFooter.val() + "</div>";
+		msg +=  "<div>" + blood.replace(/\n/g, "<br>")  + "</div>";
+//		msg +=  "<div>" + messageFooter.val() + "</div>";
 		$("#message_preview").html(msg);
+		$("#message_preview_input").val(messageHeader.val() + "\n" + blood);
 	}
 });
 </script>

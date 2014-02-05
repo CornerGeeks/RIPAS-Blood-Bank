@@ -16,14 +16,61 @@ class PostToFacebook extends PostToInterface
 		// );
 
 		$this->facebook = new Facebook($this->config);
+		try{
+			// if user removes app authorization
+			$this->hasAccess = $this->has_permissions();
+			if($this->hasAccess)
+				$this->pages = $this->getPagesAndAccessTokens();
+		}
+		catch(Exception $err){
 
-		$this->hasAccess = $this->has_permissions();
-		$this->pages = $this->getPagesAndAccessTokens();
+		}
     }
+	public function postMessage($message, $serverData){
+		$POST = $serverData['post'];
+		$messageResponse = array(
+			'STATUS' => 0
+		);
+
+	  	if(array_key_exists('code_page_id', $POST)) {
+			//Post the message
+			parse_str($POST['code_page_id'], $code_page_arr);
+			$code = $code_page_arr['code'];
+			$page_id = $code_page_arr['page_id'];
+			
+			// date_default_timezone_set('Asia/Brunei');
+			// $new_message .= "\r\n\r\nPosted from Brunei Blood Bank Status App: " . date('d/m/Y h:i:s a', time());
+			$fbMessageObj = array(
+					"message" => strip_tags($message['message']), 
+					"access_token" => $code,
+			);
+			try
+			{
+				$user_page_post = $this->facebook->api("/$page_id/feed", 'POST', $fbMessageObj);
+				if($user_page_post && !empty($user_page_post['id'])){
+					$messageResponse['STATUS'] = 200;
+					$messageData = array(
+						'id' => $user_page_post['id'],
+						'link' => 'http://facebook.com/' . $user_page_post['id'],
+					);
+					$messageResponse['data'] = $messageData;					
+				}
+				else{
+					$messageResponse['STATUS'] = 302;
+				}
+			}
+			catch(Exception $err){
+				$messageResponse['STATUS'] = 500;
+				$messageResponse['data'] = array($err);
+			}
+
+		}
+		return $messageResponse;
+	}
 
     // TODO: should read a template somewhere
 	function show_login() {
-		$login_url = $this->facebook->getLoginUrl( array( 'scope' => implode(",",permissions()) ));
+		$login_url = $this->facebook->getLoginUrl( array( 'scope' => implode(",",$this->permissions()) ));
 		return '<a href="' . $login_url . '">Login to Facebook and Grant Necessary Permissions</a>';
 	}
 	// TODO: should read a template somewhere
@@ -49,7 +96,7 @@ class PostToFacebook extends PostToInterface
     			return "No pages";
     	}
     	else{
-    		return show_login();
+    		return $this->show_login();
     	}
     }
 
@@ -97,6 +144,9 @@ class PostToFacebook extends PostToInterface
 
     // check if current instance has access to facebook
 	function has_permissions() {
+    	$user_id = @$this->facebook->getUser();
+    	#print_r($user_id);
+    	if($user_id == null) return false;
 		$permissions = $this->facebook->api("/me/permissions");
 		foreach($this->permissions() as $perm){
 			if( !array_key_exists($perm, $permissions['data'][0]) ) {	

@@ -32,6 +32,7 @@ abstract class PostToInterface
 
     public function toString(){}
 
+    public abstract function postMessage($message, $serverData);
 
 }
 ?>
