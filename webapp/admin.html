@@ -1,78 +1,94 @@
-<style>
-#message_preview {
-	border: 1px solid #ccc;
-	padding: 5px;
-}
-</style>
-
-<h3>Admin page</h3>
-<form id="form_blood" method="post" action="admin.php">
-	<div>Message:</div>
-	<textarea id="message_header" name="message_header" class="updatePreview"></textarea>
-	<div>Message footer:</div>
-	<textarea id="message_footer" name="message_footer" class="updatePreview"></textarea>
-	<div class="blood_row">
-		<div class="blood_type">A</div>
-		<input class="updatePreview" type="radio" name="blood_a" value="Very Low" id="blood_a_vlow"/>
-		<label for="blood_a_vlow">Very Low</label>
-		<input class="updatePreview" type="radio" name="blood_a" value="Low" id="blood_a_low"/>
-		<label for="blood_a_low">Low</label>
-		<input class="updatePreview" type="radio" name="blood_a" value="OK" id="blood_a_ok"/>
-		<label for="blood_a_ok">OK</label>
-		<input class="updatePreview" type="radio" name="blood_a" value="-" id="blood_a_"/>
-		<label for="blood_a_">Unknown</label>
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Admin Page</title>
+		<style>
+		
+		</style>
+		<link rel="stylesheet" href="css/admin-RIPAS-style.css" />
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+	</head>
+	
+	<body>
+	<div class="newheader">
+		<ul>
+			<li><a href="#">Blood Bank</a></li>
+			<li>Logo</li>
+			<li><a href="#">Announcement</a></li>
+		</ul>
 	</div>
-	<div class="blood_row">
-		<div class="blood_type">B</div>
-		<input class="updatePreview" type="radio" name="blood_b" value="Very Low" id="blood_b_vlow"/>
-		<label for="blood_b_vlow">Very Low</label>
-		<input class="updatePreview" type="radio" name="blood_b" value="Low" id="blood_b_low"/>
-		<label for="blood_b_low">Low</label>
-		<input class="updatePreview" type="radio" name="blood_b" value="OK" id="blood_b_ok"/>
-		<label for="blood_b_ok">OK</label>
-		<input class="updatePreview" type="radio" name="blood_b" value="-" id="blood_b_"/>
-		<label for="blood_b_">Unknown</label>
-	</div>
+	<h3 style="clear: right;">Announcement</h3>
+		<!--Form-->
+		
+		<form id="form_blood" method="post" action="admin.php">
+			<div>Message:</div>
+			<textarea id="message_header" name="message_header" class="updatePreview"></textarea>
+			<div>Message footer:</div>
+			<textarea id="message_footer" name="message_footer" class="updatePreview"></textarea>
+			<div class="blood_row">
+				<div class="blood_type">A</div>
+				<input class="updatePreview" type="radio" name="blood_a" value="Very Low" id="blood_a_vlow"/>
+				<label for="blood_a_vlow">Very Low</label>
+				<input class="updatePreview" type="radio" name="blood_a" value="Low" id="blood_a_low"/>
+				<label for="blood_a_low">Low</label>
+				<input class="updatePreview" type="radio" name="blood_a" value="OK" id="blood_a_ok"/>
+				<label for="blood_a_ok">OK</label>
+				<input class="updatePreview" type="radio" name="blood_a" value="-" id="blood_a_"/>
+				<label for="blood_a_">Unknown</label>
+			</div>
+			<div class="blood_row">
+				<div class="blood_type">B</div>
+				<input class="updatePreview" type="radio" name="blood_b" value="Very Low" id="blood_b_vlow"/>
+				<label for="blood_b_vlow">Very Low</label>
+				<input class="updatePreview" type="radio" name="blood_b" value="Low" id="blood_b_low"/>
+				<label for="blood_b_low">Low</label>
+				<input class="updatePreview" type="radio" name="blood_b" value="OK" id="blood_b_ok"/>
+				<label for="blood_b_ok">OK</label>
+				<input class="updatePreview" type="radio" name="blood_b" value="-" id="blood_b_"/>
+				<label for="blood_b_">Unknown</label>
+			</div>
 
-	Post to
-	<div>
-		<input type="checkbox" name="post_to" id="post_to_facebook" value="facebook" /><label for="post_to_facebook">Facebook</label>
-		<input type="checkbox" name="post_to" id="post_to_twitter" value="twitter" /><label for="post_to_twitter">Twitter</label>
-		<input type="checkbox" name="post_to" id="post_to_instagram" value="linked" /><label for="post_to_instagram">Instagram</label>
-	</div>
+			Post to
+			<div>
+				<input type="checkbox" name="post_to" id="post_to_facebook" value="facebook" /><label for="post_to_facebook">Facebook</label>
+				<input type="checkbox" name="post_to" id="post_to_twitter" value="twitter" /><label for="post_to_twitter">Twitter</label>
+				<input type="checkbox" name="post_to" id="post_to_instagram" value="linked" /><label for="post_to_instagram">Instagram</label>
+			</div>
 
-	<div>
-		<strong>Preview of message:</strong>
-		<div id="message_preview">
-		</div>
-	</div>
+			<div>
+				<strong>Preview of message:</strong>
+				<div id="message_preview">
+				</div>
+			</div>
 
-	<input type="submit" value="Send">
-</form>
-<script src="js/jquery-1.10.2.min.js"></script>
-<script>
-$(document).ready(function(){
-	var form = $("#form_blood");
-	var messageHeader = $("#message_header");
-	var messageFooter = $("#message_footer");
+			<input type="submit" value="ANNOUNCE NOW" class="submit">
+		</form>
+		<script src="js/jquery-1.10.2.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			var form = $("#form_blood");
+			var messageHeader = $("#message_header");
+			var messageFooter = $("#message_footer");
 
-	$(".updatePreview").on('keyup', function(){ updatePreview(); });
-	$(".updatePreview").on('change', function(){ updatePreview(); });
-	function updatePreview(){
+			$(".updatePreview").on('keyup', function(){ updatePreview(); });
+			$(".updatePreview").on('change', function(){ updatePreview(); });
+			function updatePreview(){
 
-		var msg = "";
-		var blood = "";
-		form.find(":checked").each(function(){
-			var obj = jQuery(this);
-			var blood_type = obj.attr("name").replace("blood_", "").toUpperCase();
-			var status = obj.val();
-			blood += "<li>" + blood_type + ": " + status + "</li>";
+				var msg = "";
+				var blood = "";
+				form.find(":checked").each(function(){
+					var obj = jQuery(this);
+					var blood_type = obj.attr("name").replace("blood_", "").toUpperCase();
+					var status = obj.val();
+					blood += "<li>" + blood_type + ": " + status + "</li>";
 
+				});
+				msg +=  "<div>" + messageHeader.val()  + "</div>";
+				msg +=  "<ul>" + blood  + "</ul>";
+				msg +=  "<div>" + messageFooter.val() + "</div>";
+				$("#message_preview").html(msg);
+			}
 		});
-		msg +=  "<div>" + messageHeader.val()  + "</div>";
-		msg +=  "<ul>" + blood  + "</ul>";
-		msg +=  "<div>" + messageFooter.val() + "</div>";
-		$("#message_preview").html(msg);
-	}
-});
-</script>
+		</script>
+	</body>
+</html>
